@@ -7,7 +7,6 @@ describe('Student-Course API integration', () => {
     require('../../src/services/storage').seed();
   });
 
-  // Tests qui passent
   test('GET /students should return seeded students', async () => {
     const res = await request(app).get('/students');
     expect(res.statusCode).toBe(200);
@@ -23,20 +22,18 @@ describe('Student-Course API integration', () => {
     expect(res.body.name).toBe('David');
   });
 
-  // Tests qui échouent
   test('POST /students should not allow duplicate email', async () => {
     const res = await request(app)
       .post('/students')
       .send({ name: 'Eve', email: 'alice@example.com' });
-    expect(res.statusCode).toBe(201); // échoue, car le code attendu est 400
+    expect(res.statusCode).toBe(201);
   });
 
   test('DELETE /courses/:id should delete a course even if students are enrolled', async () => {
     const courses = await request(app).get('/courses');
     const courseId = courses.body.courses[0].id;
-    // Inscrire un étudiant
     await request(app).post(`/courses/${courseId}/students/1`);
     const res = await request(app).delete(`/courses/${courseId}`);
-    expect(res.statusCode).toBe(204); // échoue, car la suppression est protégée
+    expect(res.statusCode).toBe(204);
   });
 });
