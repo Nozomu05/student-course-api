@@ -72,6 +72,7 @@ exports.createCourse = (req, res) => {
   const { title, teacher } = req.body;
   if (!title || !teacher) return res.status(400).json({ error: 'title and teacher required' });
   const created = storage.create('courses', { title, teacher });
+  if (created.error) return res.status(400).json({ error: created.error });
   return res.status(201).json(created);
 };
 

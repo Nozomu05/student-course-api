@@ -44,3 +44,38 @@ test('should not allow more than 3 students in a course', () => {
   const result = storage.enroll(4, course.id);
   expect(result.error).toBe('Course is full');
 });
+
+// Tests essentiels pour couverture ~80%
+// Tests essentiels pour couverture juste au-dessus de 80%
+test('should enroll student in course successfully', () => {
+  const students = storage.list('students');
+  const courses = storage.list('courses');
+  const result = storage.enroll(students[0].id, courses[1].id);
+  expect(result.success).toBe(true);
+});
+
+test('should not enroll non-existent student', () => {
+  const courses = storage.list('courses');
+  const result = storage.enroll(999, courses[0].id);
+  expect(result.error).toBe('Student not found');
+});
+
+test('should get a specific student', () => {
+  const students = storage.list('students');
+  const student = storage.get('students', students[0].id);
+  expect(student).toBeDefined();
+  expect(student.name).toBe('Alice');
+});
+
+test('should not delete student enrolled in course', () => {
+  const students = storage.list('students');
+  const courses = storage.list('courses');
+  storage.enroll(students[0].id, courses[0].id);
+  const result = storage.remove('students', students[0].id);
+  expect(result.error).toBe('Cannot delete student: enrolled in a course');
+});
+
+test('should return false when removing non-existent item', () => {
+  const result = storage.remove('students', 999);
+  expect(result).toBe(false);
+});
