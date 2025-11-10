@@ -10,7 +10,7 @@ L’objectif est d’améliorer la qualité du code et la couverture de tests à
 ## Objectifs pour les étudiants
 
 - **Appliquer les standards de qualité** : linters (ESLint), formatage (Prettier), bonnes pratiques.
-- **Intégrer des outils d’analyse statique** : exemple : SonarQube.
+- **Intégrer des outils d’analyse statique** : exemple : SonarQube, Codacy.
 - **Réaliser une revue de code collaborative** et la documenter.
 - **Mettre en place une suite de tests automatisés** (unitaires et intégration) avec Jest, Mocha ou Cypress.
 - **Intégrer les tests dans une pipeline CI/CD** (GitHub Actions).
@@ -32,7 +32,11 @@ L’objectif est d’améliorer la qualité du code et la couverture de tests à
 - Mettre en place ESLint et Prettier.
 - Intégrer la vérification de qualité et les tests dans la CI.
 - Finaliser la documentation Swagger.
+- Intégrer Codacy comme outil d’analyse statique
+- Ajouter un template de Pull Request (.github/pull_request_template.md).
+- Produire une Pull Request bien documentée avec des messages de commits pertinents.
 - Rédiger une documentation technique complète (Markdown ou générateur).
+- Fournir un dépôt Git propre, lisible et bien organisé.
 
 ## Démarrage rapide
 
