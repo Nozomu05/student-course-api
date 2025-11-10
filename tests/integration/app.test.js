@@ -26,14 +26,14 @@ describe('Student-Course API integration', () => {
     const res = await request(app)
       .post('/students')
       .send({ name: 'Eve', email: 'alice@example.com' });
-    expect(res.statusCode).toBe(201);
+    expect(res.statusCode).toBe(400);
   });
 
-  test('DELETE /courses/:id should delete a course even if students are enrolled', async () => {
+  test('DELETE /courses/:id should not delete a course if students are enrolled', async () => {
     const courses = await request(app).get('/courses');
     const courseId = courses.body.courses[0].id;
     await request(app).post(`/courses/${courseId}/students/1`);
     const res = await request(app).delete(`/courses/${courseId}`);
-    expect(res.statusCode).toBe(204);
+    expect(res.statusCode).toBe(400);
   });
 });

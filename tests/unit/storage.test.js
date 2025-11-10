@@ -5,9 +5,9 @@ beforeEach(() => {
   storage.seed();
 });
 
-test('should allow duplicate course title', () => {
+test('should not allow duplicate course title', () => {
   const result = storage.create('courses', { title: 'Math', teacher: 'Someone' });
-  expect(result.title).toBe('Math');
+  expect(result.error).toBe('Course title must be unique');
 });
 
 test('should list seeded students', () => {
@@ -33,7 +33,7 @@ test('should delete a student', () => {
   expect(result).toBe(true);
 });
 
-test('should allow more than 3 students in a course', () => {
+test('should not allow more than 3 students in a course', () => {
   const students = storage.list('students');
   const course = storage.list('courses')[0];
   storage.create('students', { name: 'Extra', email: 'extra@example.com' });
@@ -42,5 +42,5 @@ test('should allow more than 3 students in a course', () => {
   storage.enroll(students[1].id, course.id);
   storage.enroll(students[2].id, course.id);
   const result = storage.enroll(4, course.id);
-  expect(result.success).toBe(true);
+  expect(result.error).toBe('Course is full');
 });
