@@ -2,7 +2,7 @@
 const data = {
   students: [],
   courses: [],
-  enrollments: [], // { studentId, courseId }
+  enrollments: [] // { studentId, courseId }
 };
 
 let studentId = 1;
@@ -45,7 +45,9 @@ function remove(collection, id) {
     }
   }
   const idx = data[collection].findIndex((it) => it.id === Number(id));
-  if (idx === -1) return false;
+  if (idx === -1) {
+    return false;
+  }
   data[collection].splice(idx, 1);
   return true;
 }
@@ -53,24 +55,32 @@ function remove(collection, id) {
 function enroll(studentId, courseId) {
   // Vérifie que le cours existe
   const course = get('courses', courseId);
-  if (!course) return { error: 'Course not found' };
+  if (!course) {
+    return { error: 'Course not found' };
+  }
   // Vérifie que l’étudiant existe
   const student = get('students', studentId);
-  if (!student) return { error: 'Student not found' };
+  if (!student) {
+    return { error: 'Student not found' };
+  }
   // Vérifie que l’étudiant n’est pas déjà inscrit
   if (data.enrollments.find(e => e.studentId === Number(studentId) && e.courseId === Number(courseId))) {
     return { error: 'Student already enrolled in this course' };
   }
   // Vérifie que le cours n’a pas plus de 3 étudiants
   const enrolledCount = data.enrollments.filter(e => e.courseId === Number(courseId)).length;
-  if (enrolledCount >= 3) return { error: 'Course is full' };
+  if (enrolledCount >= 3) {
+    return { error: 'Course is full' };
+  }
   data.enrollments.push({ studentId: Number(studentId), courseId: Number(courseId) });
   return { success: true };
 }
 
 function unenroll(studentId, courseId) {
   const idx = data.enrollments.findIndex(e => e.studentId === Number(studentId) && e.courseId === Number(courseId));
-  if (idx === -1) return { error: 'Enrollment not found' };
+  if (idx === -1) {
+    return { error: 'Enrollment not found' };
+  }
   data.enrollments.splice(idx, 1);
   return { success: true };
 }
@@ -112,5 +122,5 @@ module.exports = {
   unenroll,
   getStudentCourses,
   getCourseStudents,
-  seed,
+  seed
 };
