@@ -59,9 +59,7 @@ describe('Student-Course API integration', () => {
   });
 
   test('POST /students should require name and email', async() => {
-    const res = await request(app)
-      .post('/students')
-      .send({ name: 'Test' }); // missing email
+    const res = await request(app).post('/students').send({ name: 'Test' }); // missing email
     expect(res.statusCode).toBe(400);
     expect(res.body.error).toBe('name and email required');
   });
@@ -123,17 +121,13 @@ describe('Student-Course API integration', () => {
   });
 
   test('PUT /courses/:id should return 404 for non-existent course', async() => {
-    const res = await request(app)
-      .put('/courses/999')
-      .send({ title: 'Test' });
+    const res = await request(app).put('/courses/999').send({ title: 'Test' });
     expect(res.statusCode).toBe(404);
     expect(res.body.error).toBe('Course not found');
   });
 
   test('PUT /courses/:id should not allow duplicate title', async() => {
-    const res = await request(app)
-      .put('/courses/1')
-      .send({ title: 'Physics' }); // Physics already exists (course id 2)
+    const res = await request(app).put('/courses/1').send({ title: 'Physics' }); // Physics already exists (course id 2)
     expect(res.statusCode).toBe(400);
     expect(res.body.error).toBe('Course title must be unique');
   });

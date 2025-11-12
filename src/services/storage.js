@@ -13,7 +13,7 @@ function list(collection) {
 }
 
 function get(collection, id) {
-  return data[collection].find((item) => item.id === Number(id));
+  return data[collection].find(item => item.id === Number(id));
 }
 
 function create(collection, payload) {
@@ -44,7 +44,7 @@ function remove(collection, id) {
       return { error: 'Cannot delete course: students are enrolled' };
     }
   }
-  const idx = data[collection].findIndex((it) => it.id === Number(id));
+  const idx = data[collection].findIndex(it => it.id === Number(id));
   if (idx === -1) {
     return false;
   }
@@ -64,20 +64,31 @@ function enroll(studentId, courseId) {
     return { error: 'Student not found' };
   }
   // Vérifie que l’étudiant n’est pas déjà inscrit
-  if (data.enrollments.find(e => e.studentId === Number(studentId) && e.courseId === Number(courseId))) {
+  if (
+    data.enrollments.find(
+      e => e.studentId === Number(studentId) && e.courseId === Number(courseId)
+    )
+  ) {
     return { error: 'Student already enrolled in this course' };
   }
   // Vérifie que le cours n’a pas plus de 3 étudiants
-  const enrolledCount = data.enrollments.filter(e => e.courseId === Number(courseId)).length;
+  const enrolledCount = data.enrollments.filter(
+    e => e.courseId === Number(courseId)
+  ).length;
   if (enrolledCount >= 3) {
     return { error: 'Course is full' };
   }
-  data.enrollments.push({ studentId: Number(studentId), courseId: Number(courseId) });
+  data.enrollments.push({
+    studentId: Number(studentId),
+    courseId: Number(courseId)
+  });
   return { success: true };
 }
 
 function unenroll(studentId, courseId) {
-  const idx = data.enrollments.findIndex(e => e.studentId === Number(studentId) && e.courseId === Number(courseId));
+  const idx = data.enrollments.findIndex(
+    e => e.studentId === Number(studentId) && e.courseId === Number(courseId)
+  );
   if (idx === -1) {
     return { error: 'Enrollment not found' };
   }
@@ -86,11 +97,15 @@ function unenroll(studentId, courseId) {
 }
 
 function getStudentCourses(studentId) {
-  return data.enrollments.filter(e => e.studentId === Number(studentId)).map(e => get('courses', e.courseId));
+  return data.enrollments
+    .filter(e => e.studentId === Number(studentId))
+    .map(e => get('courses', e.courseId));
 }
 
 function getCourseStudents(courseId) {
-  return data.enrollments.filter(e => e.courseId === Number(courseId)).map(e => get('students', e.studentId));
+  return data.enrollments
+    .filter(e => e.courseId === Number(courseId))
+    .map(e => get('students', e.studentId));
 }
 
 function reset() {

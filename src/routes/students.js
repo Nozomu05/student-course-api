@@ -1,6 +1,10 @@
 const e = require('express');
 const {
-  listStudents, getStudent, createStudent, deleteStudent, updateStudent
+  listStudents,
+  getStudent,
+  createStudent,
+  deleteStudent,
+  updateStudent
 } = require('../controllers/studentsController');
 const r = e.Router();
 r.get('/', listStudents);

@@ -120,7 +120,10 @@ exports.updateCourse = (req, res) => {
     return res.status(404).json({ error: 'Course not found' });
   }
   const { title, teacher } = req.body;
-  if (title && storage.list('courses').find(c => c.title === title && c.id !== course.id)) {
+  if (
+    title &&
+    storage.list('courses').find(c => c.title === title && c.id !== course.id)
+  ) {
     return res.status(400).json({ error: 'Course title must be unique' });
   }
   if (title) {

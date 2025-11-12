@@ -12,22 +12,24 @@ exports.listStudents = (req, res) => {
   const paginated = students.slice(start, start + Number(limit));
   res.json({ students: paginated, total: students.length });
 };
-exports.getStudent = (a,b)=>{
-  const c = s.get('students',a.params.id);
+exports.getStudent = (a, b) => {
+  const c = s.get('students', a.params.id);
   if (!c) {
-    return b.status(404).json({ error:'Student not found' });
+    return b.status(404).json({ error: 'Student not found' });
   }
   const courses = s.getStudentCourses(a.params.id);
-  return b.json({ student:c,courses });
+  return b.json({ student: c, courses });
 };
 exports.createStudent = (req, res) => {
   const { name, email } = req.body;
   if (!name || !email) {
     return res.status(400).json({ error: 'name and email required' });
   }
-  const result = s.create('students', { name, email });if (result.error) {
+  const result = s.create('students', { name, email });
+  if (result.error) {
     return res.status(400).json({ error: result.error });
-  } return res.status(201).json(result);
+  }
+  return res.status(201).json(result);
 };
 exports.deleteStudent = (req, res) => {
   const result = s.remove('students', req.params.id);
@@ -36,7 +38,8 @@ exports.deleteStudent = (req, res) => {
   }
   if (result.error) {
     return res.status(400).json({ error: result.error });
-  } return res.status(204).send();
+  }
+  return res.status(204).send();
 };
 exports.updateStudent = (req, res) => {
   const student = s.get('students', req.params.id);
@@ -44,7 +47,10 @@ exports.updateStudent = (req, res) => {
     return res.status(404).json({ error: 'Student not found' });
   }
   const { name, email } = req.body;
-  if (email && s.list('students').find(st => st.email === email && st.id !== student.id)) {
+  if (
+    email &&
+    s.list('students').find(st => st.email === email && st.id !== student.id)
+  ) {
     return res.status(400).json({ error: 'Email must be unique' });
   }
   if (name) {

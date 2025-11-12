@@ -1,9 +1,11 @@
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 
-const x = require('./routes/students');	const y = require('./routes/courses');
+const x = require('./routes/students');
+const y = require('./routes/courses');
 
-const app = express(); app.use(express.json());
+const app = express();
+app.use(express.json());
 
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerDefinition = require('../swaggerDef');
@@ -20,10 +22,11 @@ const storage = require('./services/storage');
 
 storage.seed();
 
-app.use('/students',x);	app.use('/courses',y);
+app.use('/students', x);
+app.use('/courses', y);
 
-app.use((req,res)=>{
-  res.status(404).json({ error:'Not Found' });
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not Found' });
 });
 
 app.use((err, req, res, _next) => {
@@ -31,8 +34,9 @@ app.use((err, req, res, _next) => {
   res.status(500).json({ error: 'Internal Server Error' });
 });
 
-if (require.main === module){
-  const p = process.env.PORT || 3000;	app.listen(p,()=>{
+if (require.main === module) {
+  const p = process.env.PORT || 3000;
+  app.listen(p, () => {
     console.log(`Server listening on port ${p}`); // eslint-disable-line no-console
   });
 }
