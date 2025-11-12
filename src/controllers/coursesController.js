@@ -4,10 +4,47 @@ const storage = require('../services/storage');
  * @swagger
  * /courses:
  *   get:
- *     summary: Liste des cours
+ *     summary: Récupère la liste des cours
+ *     description: Obtient une liste paginée de cours avec filtres optionnels
+ *     tags: [Courses]
+ *     parameters:
+ *       - in: query
+ *         name: title
+ *         schema:
+ *           type: string
+ *         description: Filtre par titre (recherche partielle)
+ *       - in: query
+ *         name: teacher
+ *         schema:
+ *           type: string
+ *         description: Filtre par nom du professeur (recherche partielle)
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Numéro de page
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Nombre de cours par page
  *     responses:
  *       200:
- *         description: OK
+ *         description: Liste des cours récupérée avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 courses:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Course'
+ *                 total:
+ *                   type: integer
+ *                   description: Nombre total de cours
  */
 exports.listCourses = (req, res) => {
   let courses = storage.list('courses');
@@ -27,18 +64,36 @@ exports.listCourses = (req, res) => {
  * @swagger
  * /courses/{id}:
  *   get:
- *     summary: Récupérer un cours
+ *     summary: Récupère un cours par son ID
+ *     description: Obtient les détails d'un cours et la liste des étudiants inscrits
+ *     tags: [Courses]
  *     parameters:
- *       - name: id
- *         in: path
+ *       - in: path
+ *         name: id
  *         required: true
  *         schema:
  *           type: integer
+ *         description: ID unique du cours
  *     responses:
  *       200:
- *         description: OK
+ *         description: Cours trouvé avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 course:
+ *                   $ref: '#/components/schemas/Course'
+ *                 students:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Student'
  *       404:
- *         description: Non trouvé
+ *         description: Cours non trouvé
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 exports.getCourse = (req, res) => {
   const course = storage.get('courses', req.params.id);
@@ -53,26 +108,40 @@ exports.getCourse = (req, res) => {
  * @swagger
  * /courses:
  *   post:
- *     summary: Créer un cours
+ *     summary: Crée un nouveau cours
+ *     description: Ajoute un nouveau cours au système
+ *     tags: [Courses]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             properties:
- *               title:
- *                 type: string
- *               teacher:
- *                 type: string
  *             required:
  *               - title
  *               - teacher
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: Titre du cours
+ *                 example: "Physique"
+ *               teacher:
+ *                 type: string
+ *                 description: Nom du professeur
+ *                 example: "Mme. Durand"
  *     responses:
  *       201:
- *         description: Créé
+ *         description: Cours créé avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Course'
  *       400:
- *         description: Paramètres invalides
+ *         description: Données manquantes ou cours déjà existant
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 exports.createCourse = (req, res) => {
   const { title, teacher } = req.body;
