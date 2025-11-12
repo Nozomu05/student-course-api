@@ -56,6 +56,7 @@ Fournir des exemples de payloads, réponses attendues, et commandes curl/Postman
 ## Notes supplémentaires
 
 Ajoutez toute information utile :
+
 - Captures d'écran de l'interface Swagger (si endpoints modifiés)
 - Logs d'erreur ou de performance
 - Références de design ou spécifications
@@ -64,6 +65,7 @@ Ajoutez toute information utile :
 ---
 
 **Commandes utiles pour le reviewer :**
+
 ```bash
 npm install && npm test          # Tests complets
 npm run test:coverage           # Vérifier couverture
