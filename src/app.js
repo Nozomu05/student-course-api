@@ -12,7 +12,7 @@ const swaggerDefinition = require('../swaggerDef');
 
 const options = {
   swaggerDefinition,
-  apis: ['./src/controllers/*.js']
+  apis: ['./src/controllers/*.js', './src/routes/*.js']
 };
 
 const swaggerSpec = swaggerJSDoc(options);
