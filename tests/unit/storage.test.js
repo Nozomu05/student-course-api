@@ -54,8 +54,6 @@ test('should not allow more than 3 students in a course', () => {
   expect(result.error).toBe('Course is full');
 });
 
-// Tests essentiels pour couverture ~80%
-// Tests essentiels pour couverture juste au-dessus de 80%
 test('should enroll student in course successfully', () => {
   const students = storage.list('students');
   const courses = storage.list('courses');

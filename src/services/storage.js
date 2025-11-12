@@ -1,8 +1,7 @@
-// storage.js — stockage en mémoire (pour TP sans DB)
 const data = {
   students: [],
   courses: [],
-  enrollments: [] // { studentId, courseId }
+  enrollments: []
 };
 
 let studentId = 1;
@@ -53,17 +52,14 @@ function remove(collection, id) {
 }
 
 function enroll(studentId, courseId) {
-  // Vérifie que le cours existe
   const course = get('courses', courseId);
   if (!course) {
     return { error: 'Course not found' };
   }
-  // Vérifie que l’étudiant existe
   const student = get('students', studentId);
   if (!student) {
     return { error: 'Student not found' };
   }
-  // Vérifie que l’étudiant n’est pas déjà inscrit
   if (
     data.enrollments.find(
       e => e.studentId === Number(studentId) && e.courseId === Number(courseId)
@@ -71,7 +67,6 @@ function enroll(studentId, courseId) {
   ) {
     return { error: 'Student already enrolled in this course' };
   }
-  // Vérifie que le cours n’a pas plus de 3 étudiants
   const enrolledCount = data.enrollments.filter(
     e => e.courseId === Number(courseId)
   ).length;
@@ -109,7 +104,6 @@ function getCourseStudents(courseId) {
 }
 
 function reset() {
-  // utile pour les tests : réinitialiser l'état
   data.students = [];
   data.courses = [];
   studentId = 1;
@@ -117,11 +111,9 @@ function reset() {
 }
 
 function seed() {
-  // Ajoute quelques étudiants
   create('students', { name: 'Alice', email: 'alice@example.com' });
   create('students', { name: 'Bob', email: 'bob@example.com' });
   create('students', { name: 'Charlie', email: 'charlie@example.com' });
-  // Ajoute quelques cours
   create('courses', { title: 'Math', teacher: 'Mr. Smith' });
   create('courses', { title: 'Physics', teacher: 'Dr. Brown' });
   create('courses', { title: 'History', teacher: 'Ms. Clark' });
