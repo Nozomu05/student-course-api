@@ -26,14 +26,115 @@ describe('Student-Course API integration', () => {
     const res = await request(app)
       .post('/students')
       .send({ name: 'Eve', email: 'alice@example.com' });
-    expect(res.statusCode).toBe(201);
+    expect(res.statusCode).toBe(400);
   });
 
-  test('DELETE /courses/:id should delete a course even if students are enrolled', async () => {
+  test('DELETE /courses/:id should not delete a course if students are enrolled', async () => {
     const courses = await request(app).get('/courses');
     const courseId = courses.body.courses[0].id;
     await request(app).post(`/courses/${courseId}/students/1`);
     const res = await request(app).delete(`/courses/${courseId}`);
+    expect(res.statusCode).toBe(400);
+  });
+
+  test('GET /students/:id should return student with courses', async () => {
+    const res = await request(app).get('/students/1');
+    expect(res.statusCode).toBe(200);
+    expect(res.body.student).toBeDefined();
+    expect(res.body.courses).toBeDefined();
+  });
+
+  test('GET /students/:id should return 404 for non-existent student', async () => {
+    const res = await request(app).get('/students/999');
+    expect(res.statusCode).toBe(404);
+    expect(res.body.error).toBe('Student not found');
+  });
+
+  test('GET /courses/:id should return course with students', async () => {
+    const res = await request(app).get('/courses/1');
+    expect(res.statusCode).toBe(200);
+    expect(res.body.course).toBeDefined();
+    expect(res.body.students).toBeDefined();
+  });
+
+  test('POST /students should require name and email', async () => {
+    const res = await request(app).post('/students').send({ name: 'Test' });
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe('name and email required');
+  });
+
+  test('POST /courses should create a new course', async () => {
+    const res = await request(app)
+      .post('/courses')
+      .send({ title: 'New Course', teacher: 'New Teacher' });
+    expect(res.statusCode).toBe(201);
+    expect(res.body.title).toBe('New Course');
+  });
+
+  test('DELETE /students/:id should delete a student', async () => {
+    const createRes = await request(app).post('/students').send({
+      name: 'Test Student',
+      email: 'test@example.com'
+    });
+    const studentId = createRes.body.id;
+
+    const res = await request(app).delete(`/students/${studentId}`);
     expect(res.statusCode).toBe(204);
+  });
+
+  test('PUT /students/:id should update a student', async () => {
+    const res = await request(app)
+      .put('/students/1')
+      .send({ name: 'Updated Alice' });
+    expect(res.statusCode).toBe(200);
+    expect(res.body.name).toBe('Updated Alice');
+  });
+
+  test('PUT /students/:id should not allow duplicate email', async () => {
+    const res = await request(app)
+      .put('/students/1')
+      .send({ email: 'bob@example.com' });
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe('Email must be unique');
+  });
+
+  test('POST /courses/:courseId/students/:studentId should enroll student', async () => {
+    const res = await request(app).post('/courses/2/students/3');
+    expect(res.statusCode).toBe(201);
+  });
+
+  test('DELETE /courses/:courseId/students/:studentId should unenroll student', async () => {
+    await request(app).post('/courses/2/students/2');
+    const res = await request(app).delete('/courses/2/students/2');
+    expect(res.statusCode).toBe(204);
+  });
+
+  test('PUT /courses/:id should update a course', async () => {
+    const res = await request(app)
+      .put('/courses/1')
+      .send({ title: 'Updated Math', teacher: 'Updated Teacher' });
+    expect(res.statusCode).toBe(200);
+    expect(res.body.title).toBe('Updated Math');
+    expect(res.body.teacher).toBe('Updated Teacher');
+  });
+
+  test('PUT /courses/:id should return 404 for non-existent course', async () => {
+    const res = await request(app).put('/courses/999').send({ title: 'Test' });
+    expect(res.statusCode).toBe(404);
+    expect(res.body.error).toBe('Course not found');
+  });
+
+  test('PUT /courses/:id should not allow duplicate title', async () => {
+    const res = await request(app).put('/courses/1').send({ title: 'Physics' });
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe('Course title must be unique');
+  });
+
+  test('POST /courses should not allow duplicate title', async () => {
+    const res = await request(app)
+      .post('/courses')
+      .send({ title: 'Math', teacher: 'Someone' });
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe('Course title must be unique');
   });
 });

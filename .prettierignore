@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Coverage reports
+coverage/
+
+# Build outputs
+dist/
+build/
+
+# Logs
+*.log
+
+# Environment files
+.env*
+
+# Documentation
+swagger.json
+swaggerDef.js
+
+# Lock files
+package-lock.json
+yarn.lock
+
+# IDE files
+.vscode/
+.idea/

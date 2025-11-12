@@ -1,6 +1,6 @@
 # StudentCourseAPI
 
-Projet pédagogique pour le module **Tests et Qualité** à l’Efrei.
+Projet pédagogique pour le module **Tests et Qualité** à l'Efrei.
 
 ## Contexte
 
@@ -45,9 +45,16 @@ npm install
 npm run dev
 ```
 
-- Accès à la documentation Swagger : `/api-docs`
-- Lancer les tests : `npm test`
-- Linter : `npm run lint`
+- Accès à la documentation Swagger : `/api-docs`
+
+## Scripts de développement
+
+```bash
+npm test        # Lancer les tests
+npm run lint    # Vérification ESLint
+npm run format  # Formatage Prettier
+```
+
 - Formatage : `npm run format`
 
 ---
